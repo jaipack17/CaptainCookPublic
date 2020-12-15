@@ -1,5 +1,0 @@
-{
-    "mongoPass": "mongodb+srv://jaikaran:OqjRTxTiO4wmxu54@cluster0.utkgp.mongodb.net/<dbname>?retryWrites=true&w=majority",
-    "mongoPass2": "mongodb+srv://jaikaran:<password>@cluster0.utkgp.mongodb.net/fridge?retryWrites=true&w=majority",
-    "token": "Nzc1MjUwOTQwMzMyMDgxMTgz.X6jmsw.MBMmgOQIhieoUqs3GzzokzFFyBs"
-}
