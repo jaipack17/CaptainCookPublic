@@ -1,4 +1,4 @@
-# CaptainCookPublic
+# Captain Cook - The Discord Bot Made In Discord.js
 The github repository for the Discord Bot - Captain Cook
 
 
