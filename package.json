@@ -1,0 +1,20 @@
+{
+  "name": "captaincook",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jaipack17",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "dblapi.js": "^2.4.1",
+    "discord.js": "^12.5.1",
+    "git": "^0.1.5",
+    "mongoose": "^5.10.15",
+    "npm-git-install": "^0.3.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}
