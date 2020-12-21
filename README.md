@@ -6,7 +6,7 @@ Check it out here: https://top.gg/bot/775250940332081183
 
 What does the bot do?
 
-#Captain cook is a fun bot. Cook different and delicious foods, work at restaurants, earn money and live a life as a chef!
+# Captain cook is a fun bot. Cook different and delicious foods, work at restaurants, earn money and live a life as a chef!
 
 Captain Cook brings great fun to your server!
 
