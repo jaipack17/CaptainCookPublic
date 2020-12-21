@@ -4,13 +4,14 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const mongoose = require('mongoose');
 const botconfig = require("./botconfig.json");
-const token = botconfig.token;
+const token = botconfig.Token;
+var DanBotHosting = require("danbot-hosting");
+const DBL = require("dblapi.js");
+const dbl = new DBL(botconfig.topggtoken, client);
 
 //api
 
 const Fs = require("fs");
-const DBL = require("dblapi.js");
-const dbl = new DBL(token, client);
 
 //commandprefix
 
@@ -27,27 +28,37 @@ mongoose.connect(botconfig.mongoPass, {
 //database setup
 
 const Data = require("./models/data.js");
+const Tokens = require("./models/tokens.js");
 const { disconnect } = require("process");
 const { waitForDebugger } = require("inspector");
+const { brotliDecompress } = require("zlib");
+const { toNamespacedPath } = require("path");
+const { O_TRUNC } = require("constants");
 
 //api events
+client.on("ready", async () => {
+    console.log("bot is now ready");
+    const API = new DanBotHosting.Client("danbot-h888jv", client);
+  
+    // Start posting
+    let initalPost = await API.autopost();
+  
+    if (initalPost) {
+      console.error(initalPost); // console the error
+    }
+  });
+  dbl.on('posted', () => {
+    console.log('Server count posted!');
+  })
+   
+  dbl.on('error', e => {
+   console.log(`Oops! ${e}`);
+  })
 
 client.on("ready", () => {
     console.log("Chef is online");
-    client.user.setActivity('chefs cook | chef help', { type: 'WATCHING' })
-    setInterval(() => {
-        dbl.postStats(client.guilds.size, client.shards.Id, client.shards.total);
-    }, 1800000);
+    client.user.setActivity('with new Christmas Commands! | chef help', { type: 'PLAYING' })
 });
-
-dbl.on('posted', () => {
-    console.log('Server count posted!');
-})
-
-dbl.on('error', e => {
-    console.log(`Oops! ${e}`);
-})
-
 
 //commands
 
@@ -56,11 +67,124 @@ client.on("message", async (message) => {
         var args = message.content.substr(prefix.length)
             .toLowerCase()
             .split(" ");
-            
+            if(args[0] == "pass"){
+                Tokens.findOne({
+                    userID: message.author.id
+                },(err, data) => {
+                    if(err) console.log(err);
+                    if(data.cookies >= 30 && data.claimed == 0){
+                        data.claimed++;
+                        let m = new Discord.MessageEmbed()
+                        .setColor("GREEN")
+                        .setTitle("TIER UP!")
+                        .setDescription("Tier 1 Completed! You claimed a 1000$ reward!")
+                        .setFooter("The reward has been added to your balance");
+                        message.channel.send(m);
+                        Data.findOne({
+                            userID: message.author.id
+                        }, (err, data2) => {
+                            if(err) console.log(err);
+                            data2.bal += 1000;
+
+                            data2.save().catch(err => console.log(err));
+                        })
+                        console.log("Reached")
+                    }
+                    if(data.cookies >= 50 && data.milk >= 50 && data.claimed == 1){
+                        data.claimed++;
+                        let m = new Discord.MessageEmbed()
+                        .setColor("GREEN")
+                        .setTitle("TIER UP!")
+                        .setDescription("Tier 2 Completed! You claimed 5 of each food items!")
+                        .setFooter("The reward has been added to your fridge");
+                        message.channel.send(m);
+                        Data.findOne({
+                            userID: message.author.id
+                        }, (err, data2) => {
+                            if(err) console.log(err);
+                            data2.wellingtons += 5;
+                            data2.salmons += 5;
+                            data2.scallops += 5;
+                            data2.steaks += 5;
+                            data2.risottos += 5;
+                            data2.burgers += 5;
+                            data2.chickendinners += 5;
+                            data2.pizzas += 5
+                            data2.save().catch(err => console.log(err));
+                        })
+                    }
+                    if(data.cookies >= 100 && data.claimed == 2){
+                        data.claimed++;
+                        let m = new Discord.MessageEmbed()
+                        .setColor("GREEN")
+                        .setTitle("TIER UP!")
+                        .setDescription("Tier 3 Completed! You claimed a reward of 20000$!")
+                        .setFooter("The reward has been added to your balance");
+                        message.channel.send(m);
+                        Data.findOne({
+                            userID: message.author.id
+                        }, (err, data2) => {
+                            if(err) console.log(err);
+                            data2.bal += 20000;
+                            data2.save().catch(err => console.log(err));
+                        })
+                    }
+                    if(data.milk >= 100 && data.claimed == 3){
+                        data.claimed++;
+                        let m = new Discord.MessageEmbed()
+                        .setColor("GREEN")
+                        .setTitle("TIER UP!")
+                        .setDescription("Tier 4 Completed! You claimed 20 of each food items!")
+                        .setFooter("The reward has been added to your fridge");
+                        message.channel.send(m);
+                        Data.findOne({
+                            userID: message.author.id
+                        }, (err, data2) => {
+                            if(err) console.log(err);
+                            data2.wellingtons += 20;
+                            data2.salmons += 20;
+                            data2.scallops += 20;
+                            data2.steaks += 20;
+                            data2.risottos += 20;
+                            data2.burgers += 20;
+                            data2.chickendinners += 20;
+                            data2.pizzas += 20;
+                            data2.save().catch(err => console.log(err));
+                        })
+                    }
+                    if(data.cookies >= 1000 && data.milk >= 1000 && data.claimed == 4){
+                        data.claimed++;
+
+                        let m = new Discord.MessageEmbed()
+                        .setColor("GREEN")
+                        .setTitle("TIER UP!")
+                        .setDescription("Tier 5 Completed! You claimed a reward of 100000$!")
+                        .setFooter("The reward has been added to your balance");
+                        message.channel.send(m);
+                        Data.findOne({
+                            userID: message.author.id
+                        }, (err, data2) => {
+                            if(err) console.log(err);
+                            data2.bal += 100000;
+                            data2.save().catch(err => console.log(err));
+                        })
+                    }
+                    data.save().catch(err => console.log(err));
+                })
+                let embed = new Discord.MessageEmbed()
+                .setColor("#FF0000")
+                .setTitle("Christmas Chef Pass")
+                .setDescription("Claim Free Rewards Now!")
+                .addField("Tier 1: 1000$", "Requirements: 🍪Give 30 cookies to Santa")
+                .addField("Tier 2: 5 of each food items!", "Requirements: 🍪Give 50 cookies and 🥛50 glasses of milk to Santa")
+                .addField("Tier 3: 20000$", "Requirements: 🍪Give 100 cookies")
+                .addField("Tier 4: 20 of each food items!", "Requirements: Give 🥛100 glasses of milk to Santa")
+                .addField("Tier 5: 100,000$", "Requirements: 🍪Give 1000 cookies and 🥛1000 glasses of milk to Santa")
+                .setFooter("Rewards are automatically given to you when you complete a Tier requirment")
+                message.channel.send(embed)
+            }
             if(args[0] == "userinfo"){
                 let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
-        
-        
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`${user.user.username}`)
                     .setColor(`BLUE`)
@@ -116,9 +240,26 @@ client.on("message", async (message) => {
                 message.channel.send({embed: embedPoll}).then(embedMessage => {
                     embedMessage.react("👍");
                     embedMessage.react("👎");
-                });
+             });
 
                 
+
+            }
+            if(args[0] == "ask"){
+                if(message.channel.id == 777929425412292629){
+                    message.delete();
+                    let question = args.slice(1).join(' ');
+                    let m = new Discord.MessageEmbed()
+                    .setColor("RED")
+                    .setTitle(`Doubt asked by ${message.author.username}#${message.author.discriminator}`)
+                    .setDescription(question)
+                    .setFooter("Your doubt will be answered shortly in #doubt-answers")
+
+                    message.channel.send(m);
+                } else{
+                    message.channel.send(`${message.author.tag} ask your doubt in #ask-doubts using the same command`)
+                }
+
             }    
             if(args[0] == "generate"){
                 let num = args.slice(1).join(' ');
@@ -169,22 +310,35 @@ client.on("message", async (message) => {
             success.setColor("ORANGE");
             success.setTitle("Command Catergories");
             success.setThumbnail(botIcon);
+            success.addField("🎅Christmas commands:", `Type "chef helpchristmas"`);
             success.addField("🔨Utility commands:", `Type "chef helputility"`);
             success.addField("🎮Captain Cook Game commands:", `Type "chef helpgame"`);
-            success.addField("✅Captain Cook Christmas Themed Moderation:", `Type "chef helpmod (COMING SOON)"`);
-            success.setFooter("Don't worry, more commands and categories like moderation, fun, game etc are been developed. They will be added soon!");
+            success.addField("✅Captain Cook Moderation:", `Type "chef helpmod (COMING SOON)"`);
+            success.setFooter("Don't worry, more commands and categories like moderation, fun, game etc are being developed. They will be added soon!");
             message.channel.send(success);
         }
-
+        if(args == "helpchristmas"){
+            let m = new Discord.MessageEmbed()
+            .setColor("#FF0000")
+            .setTitle("🎅Christmas Commands🎅")
+            .setDescription(`These commands will only be available for a limited time! Click [this](https://top.gg/bot/775250940332081183) for more information`)
+            .addField("🍪Give Cookie to Santa", `\`\`chef givecookie\`\``)
+            .addField("🥛Give Milk to Santa", `\`\`chef givemilk\`\``)
+            .addField("🎅Check out exculsive rewards for giving cookies and milk to Santa", `\`\`chef pass\`\``)
+            .addField("Get to know how many cookies and milk you gave and how many tiers you completed in the chef pass", `\`\`chef status\`\``)
+            .setFooter("Enjoy!")
+            message.channel.send(m);
+        }
         if(args == "helputility"){
             let success = new Discord.MessageEmbed();
             success.setTitle("🔨Utility Commands");
             success.setColor("ORANGE");
             success.addField("chef updates", "Displays latest updates of Captain Cook");
+            success.addField("chef announcement", "Makes a server announcement for you!");
             success.addField("chef serverinfo", "Displays server information");
             success.addField("chef userinfo <@user>", "Displays user's information" )
-            success.addField(`chef poll your question`, "Creates a yes or no poll for you!" )
-            success.addField(`chef generate number`, "Generates a random number between 0 to given number" )
+            success.addField(`chef poll <your question>`, "Creates a yes or no poll for you!" )
+            success.addField(`chef generate <number>`, "Generates a random number between 0 to given number" )
             success.addField("chef rolldice", "Rolls a dice for you. Best for board games!")
             message.channel.send(success);
         }
@@ -216,9 +370,11 @@ client.on("message", async (message) => {
             .setColor("YELLOW")
             .setThumbnail(client.user.displayAvatarURL({dynamic : true}))
             .setTitle("Captain Cook's Latest Updates!")
-            .setDescription("These are the latest captain cook updates and teasers. Stay tuned for more.")
-            .addField("Christmas Themed Moderation Commands (COMING SOON)", "Type chef helpmod")
-            .setFooter("Updated on 13th December 2020")
+            .setDescription("Click [me](https://top.gg/bot/775250940332081183) for more Information")
+            .addField("Christmas Commands are here!", "Type chef helpchristmas")
+            .addField("50% bonus in daily reward!", "Type chef daily")
+            .addField("New Christmas Chef Pass! Claim Rewards now!", "Type chef pass" )
+            .setFooter("Updated on 20th December 2020")
             message.channel.send(m);
         }
         if (args[0] == "start") {
@@ -248,7 +404,10 @@ client.on("message", async (message) => {
                         risottos: 0,
                         pizzas: 0,
                         burgers: 0,
-                        chickendinners: 0
+                        chickendinners: 0,
+                        cookies: 0,
+                        milk: 0,
+                        claimed: 0
                     })
                     newData.save().catch(err => console.log(err));
                     let SuccessEmbed = new Discord.MessageEmbed();
@@ -291,13 +450,39 @@ client.on("message", async (message) => {
                         let SuccessEmbed = new Discord.MessageEmbed();
                         SuccessEmbed.setTitle("**BINGO**");
                         SuccessEmbed.setColor("GREEN");
-                        SuccessEmbed.setDescription("You have claimed your daily reward of 500 Cash!");
+                        SuccessEmbed.setDescription("You have claimed your daily reward of 1000 Cash! 50% Christmas Bonus!");
                         message.channel.send(SuccessEmbed);
                         return;
                     }
                 }
                 
             })
+        }
+        if(args == "announcement"){
+            let m = new Discord.MessageEmbed();
+            m.setFooter(`Announcement by ${message.author.username}#${message.author.discriminator}`);
+            message.react("✅")
+            message.channel.send("Lets Get Started! Type the title of the announcement.")
+            
+
+            try{
+                let msgs = await message.channel.awaitMessages(u2=>u2.author.id === message.author.id, {time: 3000000, max: 1});
+                m.setTitle(msgs.first().content);
+            }
+            catch(e){
+            }
+            message.channel.send("Type the content of the announcement");
+            try{
+                let msgs2 = await message.channel.awaitMessages(u2=>u2.author.id === message.author.id, {time: 3000000, max: 1});
+                m.setDescription(msgs2.first().content);
+            }
+            catch(e){
+            }
+
+
+        m.setColor("GREEN")
+        message.channel.send(m);
+
         }
 
         if (args[0] == "bal") {
@@ -1735,7 +1920,7 @@ client.on("message", async (message) => {
                             SuccessEmbed.setDescription(`Why are you so interested in punching yourself in the face. Mention a different user to fight!`);
                             message.channel.send(SuccessEmbed);
                             return;
-                        
+                            
                     })
                 }
                 
@@ -1743,7 +1928,143 @@ client.on("message", async (message) => {
             
             }
 
+            if(args == "givecookie"){
+                Tokens.findOne({
+                    userID: message.author.id
+                }, (err, data) => {
+                    if(err) console.log(err);
+                    if(!data){
+                        const newData = new Tokens({
+                            name: message.author.username,
+                            userID: message.author.id,
+                            cookies: 0,
+                            milk: 0,
+                            claimed: 0
+                        })
+                        newData.save().catch(err => console.log(err));
+                    }else{
+                        return;
+                    }
+    
+                })
+                Data.findOne({
+                    userID: message.author.id
+                }, (err, data) => {
+                    if(err) console.log(err)
+                    if(!data){
+                        message.channel.send("You need to be a chef in order to run that command!")
+                    }
+                    else{
+                        if(data.bal >= 25){
+                            if(data.bal - 25 >= 0){
+                                data.bal -= 25
+                                data.save().catch(err => console.log(err));
+                                Tokens.findOne({
+                                    userID: message.author.id
+                                }, (err, data2) => {
+                                    if(err) console.log(err);
+                                    data2.cookies += 1;
+                                    data2.save().catch(err => console.log(err));
+                                    message.channel.send("🍪You gave Santa a cookie worth 25$. Santa said Thank you!")
+                                })
+                            }
+                            else{
+                                message.channel.send("You dont have enough money to buy a cookie!")
+                            }
 
+                        }
+
+                    }
+                })
+            }
+            if(args == "givemilk"){
+                Tokens.findOne({
+                    userID: message.author.id
+                }, (err, data) => {
+                    if(err) console.log(err);
+                    if(!data){
+                        const newData = new Tokens({
+                            name: message.author.username,
+                            userID: message.author.id,
+                            cookies: 0,
+                            milk: 0,
+                            claimed: 0
+                        })
+                        newData.save().catch(err => console.log(err));
+                    }else{
+                        return;
+                    }
+    
+                })
+                Data.findOne({
+                    userID: message.author.id
+                }, (err, data) => {
+                    if(err) console.log(err)
+                    if(!data){
+                        message.channel.send("You need to be a chef in order to run that command!")
+                    }
+                    else{
+                        if(data.bal >= 50){
+                            if(data.bal - 50 >= 0){
+                                data.bal -= 50
+                                data.save().catch(err => console.log(err));
+                                Tokens.findOne({
+                                    userID: message.author.id
+                                }, (err, data2) => {
+                                    if(err) console.log(err);
+                                    data2.milk += 1;
+                                    data2.save().catch(err => console.log(err));
+                                    message.channel.send("🥛You gave Santa a glass of milk worth 50$. Santa said Thank you!")
+                                })
+                            }
+                            else{
+                                message.channel.send("You dont have enough money to buy milk!")
+                            }
+
+                        }
+
+                    }
+                })
+            }
+            if(args == "status"){
+                Tokens.findOne({
+                    userID: message.author.id
+                }, (err, data) => {
+                    if(err) console.log(err);
+                    if(!data){
+                        const newData = new Tokens({
+                            name: message.author.username,
+                            userID: message.author.id,
+                            cookies: 0,
+                            milk: 0,
+                            claimed: 0
+                        })
+                        let m = new Discord.MessageEmbed()
+                        .setColor("#FF0000")
+                        .setTitle(`${message.author.username}'s Christmas Status`)
+                        .addField("🍪Cookies Given to Santa: ", `**${data.cookies}**`)
+                        .addField("🥛Milk Glasses Given to Santa: ", `**${data.milk}**`)
+                        .addField("Tiers Completed in Chef Pass: ", `**${data.claimed}**`)
+                        message.channel.send(m);
+                        newData.save().catch(err => console.log(err));
+                    }else{
+                        let m = new Discord.MessageEmbed()
+                        .setColor("#FF0000")
+                        .setTitle(`${message.author.username}'s Christmas Status`)
+                        .addField("🍪Cookies Given to Santa: ", `**${data.cookies}**`, true)
+                        .addField("🥛Milk Glasses Given to Santa: ", `**${data.milk}**`, true)
+                        .addField("Tiers Completed in Chef Pass: ", `**${data.claimed}**`, true)
+                        message.channel.send(m);
+
+                    }
+
+                    })
+
+                        
+                    
+    
+                
+            }
         }
         
     

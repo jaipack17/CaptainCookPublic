@@ -1,4 +1,5 @@
 {
-    "mongoPass": "db data here",
-    "token": "bot token here"
+    "mongoPass": "mongodb+srv://jaikaran:OqjRTxTiO4wmxu54@cluster0.utkgp.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "Token": "Nzc1MjUwOTQwMzMyMDgxMTgz.X6jmsw.9Q5qEey9Kxel8q1rwcNuGtXmfGI",
+    "topggtoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc3NTI1MDk0MDMzMjA4MTE4MyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjA4Mjc4OTQ4fQ.XWvDehtqLW9VhU3wb91PvCUKibUv2OSTR1LySB1vleE"
 }
